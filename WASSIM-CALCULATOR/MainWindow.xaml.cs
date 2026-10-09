@@ -136,14 +136,22 @@ namespace WASSIM_CALCULATOR
             }
         }
 
+
+        // =========================
+        // C
+        // =========================
+
         private void BTN_C_Click(object sender, RoutedEventArgs e)
         {
             TB_Display.Text = "0";
+            premierNombre = 0;
+            operateur = "";
+            nouveauNombre = true;
         }
 
 
         // =========================
-        // C
+        // PLUS
         // =========================
 
         private void BTN_Plus_Click(object sender, RoutedEventArgs e)
@@ -240,6 +248,115 @@ namespace WASSIM_CALCULATOR
             nouveauNombre = true;
         }
 
-   
+
+        // =========================
+        // AFFICHER UN RESULTAT (fonctions)
+        // =========================
+
+        private void AfficherResultat(double valeur)
+        {
+            if (double.IsNaN(valeur) || double.IsInfinity(valeur))
+            {
+                TB_Display.Text = "Erreur";
+            }
+            else
+            {
+                // Arrondi pour éviter les résultats du genre sin(180) = 1,2E-16
+                TB_Display.Text = Math.Round(valeur, 10).ToString();
+            }
+
+            nouveauNombre = true;
+        }
+
+
+        // =========================
+        // SIN (en degrés)
+        // =========================
+
+        private void BTN_Sin_Click(object sender, RoutedEventArgs e)
+        {
+            double nombre;
+
+            if (!double.TryParse(TB_Display.Text, out nombre))
+            {
+                return;
+            }
+
+            double radians = nombre * Math.PI / 180.0;
+
+            AfficherResultat(Math.Sin(radians));
+        }
+
+
+        // =========================
+        // COS (en degrés)
+        // =========================
+
+        private void BTN_Cos_Click(object sender, RoutedEventArgs e)
+        {
+            double nombre;
+
+            if (!double.TryParse(TB_Display.Text, out nombre))
+            {
+                return;
+            }
+
+            double radians = nombre * Math.PI / 180.0;
+
+            AfficherResultat(Math.Cos(radians));
+        }
+
+
+        // =========================
+        // TAN (en degrés)
+        // =========================
+
+        private void BTN_Tan_Click(object sender, RoutedEventArgs e)
+        {
+            double nombre;
+
+            if (!double.TryParse(TB_Display.Text, out nombre))
+            {
+                return;
+            }
+
+            double radians = nombre * Math.PI / 180.0;
+
+            // tan n'existe pas à 90°, 270°... (là où cos vaut 0)
+            if (Math.Abs(Math.Cos(radians)) < 1e-10)
+            {
+                TB_Display.Text = "Erreur";
+                nouveauNombre = true;
+                return;
+            }
+
+            AfficherResultat(Math.Tan(radians));
+        }
+
+
+        // =========================
+        // RACINE CARREE
+        // =========================
+
+        private void BTN_Racine_Click(object sender, RoutedEventArgs e)
+        {
+            double nombre;
+
+            if (!double.TryParse(TB_Display.Text, out nombre))
+            {
+                return;
+            }
+
+            // Pas de racine carrée d'un nombre négatif
+            if (nombre < 0)
+            {
+                TB_Display.Text = "Erreur";
+                nouveauNombre = true;
+                return;
+            }
+
+            AfficherResultat(Math.Sqrt(nombre));
+        }
+
     }
 }
